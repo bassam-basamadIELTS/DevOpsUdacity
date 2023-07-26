@@ -15,29 +15,23 @@ jobs:
     # See: https://circleci.com/docs/configuration-reference/#executor-job
     docker:
       - image: cimg/base:stable
-    # Add steps to the job
-    # See: https://circleci.com/docs/configuration-reference/#steps
     steps:
-      - checkout
       - run:
-          name: "Say hello"
           command: "echo Hello!"
   print_world:
     docker:
       - image: circleci/node:13.8.0
     steps:
-      - checkout
       - run:
           name: "Say World"
           command: "echo World!"
-  print_MyName:
+
+  print_myName:
     docker:
-      - image: circleci/node:13.8.0
+      - image: circleci/node:13.8.0 
     steps:
       - run:
-          command: echo $My_Name
-          
-
+          command:  echo $My_Name
             
 
 # Orchestrate jobs using workflows
@@ -48,5 +42,6 @@ workflows:
       - print_hello
       - print_world:
           requires:
-              - print_hello
-      - print_MyName
+            - print_hello
+      - print_myName
+
