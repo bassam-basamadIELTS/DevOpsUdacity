@@ -31,11 +31,11 @@ jobs:
     steps:
       - run:
           name: "Save text to output text"
-          command: echo "Hello, world!" > /tmp/workspace/myFirstDirectory/output.txt
+          command: echo "Hello, world!" > ~/output.txt
       - persist_to_workspace:
-          root: /tmp/workspace
+          root: ~/
           paths:
-            - myFirstDirectory
+            - output.txt
 
   print_output_file:
     docker:
@@ -43,9 +43,9 @@ jobs:
     steps:
       - attach_workspace:
           # Must be absolute path or relative path from working_directory
-          at: /tmp/workspace/myFirstDirectory/output.txt
+          at: ~/
       - run: |
-          if [[ `cat /tmp/workspace/myFirstDirectory/output.txt` == "Hello, world!" ]]; then
+          if [[ `cat ~/output.txt` == "Hello, world!" ]]; then
             echo "It worked!";
           else
             echo "Nope!"; exit 1
