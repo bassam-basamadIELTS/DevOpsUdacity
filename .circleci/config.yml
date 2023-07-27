@@ -20,11 +20,36 @@ jobs:
           command: "echo Hello!"
   print_world:
     docker:
-      - image: circleci/node:13.8.0
+      - image: cimg/base:stable
     steps:
       - run:
           name: "Say World"
           command: "echo World!"
+  save_hello_world_in_file:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - run:
+          name: "Save text to output text"
+          command: echo "Hello, world!" > /tmp/workspace/myFirstDirectory/output.txt
+      - persist_to_workspace:
+          root: /tmp/workspace
+          paths:
+            - myFirstDirectory
+
+  print_output_file:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - attach_workspace:
+          # Must be absolute path or relative path from working_directory
+          at: /tmp/workspace/myFirstDirectory/output.txt
+      - run: |
+          if [[ `cat /tmp/workspace/myFirstDirectory/output.txt` == "Hello, world!" ]]; then
+            echo "It worked!";
+          else
+            echo "Nope!"; exit 1
+          fi
 
   print_myName:
     docker:
@@ -44,4 +69,8 @@ workflows:
           requires:
             - print_hello
       - print_myName
+      - save_hello_world_in_file
+      - print_output_file:
+          requires:
+            - save_hello_world_in_file
 
