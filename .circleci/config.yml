@@ -2,6 +2,14 @@
 # See: https://circleci.com/docs/configuration-reference
 version: 2.1
 
+commands: # a reusable command with parameters
+  display_env_var:
+    parameters:
+      to:
+        default: "No ID provided"
+        type: string
+    steps:
+      - run: echo "Workflow Id is <<parameters.to>>"
 
 orbs:
   # Declare a dependency on the welcome-orb
@@ -53,11 +61,17 @@ jobs:
 
   print_myName:
     docker:
-      - image: circleci/node:13.8.0 
+      - image: cimg/base:stable 
     steps:
       - run:
           command:  echo $My_Name
-            
+
+  print_pipeline_id:
+    docker:
+      - image: cimg/base:stable
+    steps:
+      - display_env_var:
+          to: $CIRCLE_WORKFLOW_ID          
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
@@ -73,4 +87,5 @@ workflows:
       - print_output_file:
           requires:
             - save_hello_world_in_file
+      - print_pipeline_id
 
