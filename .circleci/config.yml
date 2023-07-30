@@ -71,7 +71,12 @@ jobs:
       - image: cimg/base:stable
     steps:
       - display_env_var:
-          to: $CIRCLE_WORKFLOW_ID          
+          to: $CIRCLE_WORKFLOW_ID
+      - run: exit 1
+      - run:
+          name: on error
+          command: echo "Hello Error Bassam"
+          when: on_fail
 
 # Orchestrate jobs using workflows
 # See: https://circleci.com/docs/configuration-reference/#workflows
